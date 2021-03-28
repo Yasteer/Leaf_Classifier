@@ -29,6 +29,17 @@ Dataset_Dir     = os.path.join("100_Leaves","data")
 Train_DS        = image_dataset_from_directory(directory=Dataset_Dir,validation_split=0.25,subset="training"  ,image_size=image_size,batch_size=batch_size)
 Validation_DS   = image_dataset_from_directory(directory=Dataset_Dir,validation_split=0.25,subset="validation",image_size=image_size,batch_size=batch_size)
 
+## Augment Dataset - Create new data by modifying available data ## 
+Augmented_Data  = keras.Sequential(
+    [
+        layers.experimental.preprocessing.RandomFlip("horizontal"),
+        layers.experimental.preprocessing.RandomRotation(0.1)),
+    ]
+) # Randomly flip & rotate images in the preprocessing layer.
+
+Train_DS        = Train_DS.prefetch(buffer_size = 32)
+Validation_DS   = Validation_DS.prefetch(buffer_size = 32) # Prefetch data into a buffer so that it's immediately available to the hardware when the previous batch is complete.
+
 ## Build Model ##
 model = Sequential()
 
